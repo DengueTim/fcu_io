@@ -3,7 +3,6 @@
  * \author Daniel Koch <daniel.koch@byu.edu>
  */
 
-#include <mavrosflight/serial_exception.h>
 #include <string>
 #include <stdint.h>
 #include <eigen3/Eigen/Core>
@@ -54,59 +53,59 @@ fcuIO::fcuIO()
 
 fcuIO::~fcuIO()
 {
-  delete mavrosflight_;
+//  delete mavrosflight_;
 }
 
-void fcuIO::handle_mavlink_message(const mavlink_message_t &msg)
+void fcuIO::handle_blackbox_message(const void &msg)
 {
-  switch (msg.msgid)
-  {
-  case MAVLINK_MSG_ID_HEARTBEAT:
-    handle_heartbeat_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_COMMAND_ACK:
-    handle_command_ack_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_STATUSTEXT:
-    handle_statustext_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_ATTITUDE:
-    handle_attitude_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_SMALL_IMU:
-    handle_small_imu_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_SMALL_MAG:
-    handle_small_mag_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
-    handle_servo_output_raw_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_RC_CHANNELS:
-    handle_rc_channels_raw_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_DIFF_PRESSURE:
-    handle_diff_pressure_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_NAMED_VALUE_INT:
-    handle_named_value_int_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_NAMED_VALUE_FLOAT:
-    handle_named_value_float_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_NAMED_COMMAND_STRUCT:
-    handle_named_command_struct_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_SMALL_BARO:
-    handle_small_baro_msg(msg);
-    break;
-  case MAVLINK_MSG_ID_DISTANCE_SENSOR:
-    handle_distance_sensor(msg);
-    break;
-  default:
-    ROS_DEBUG("fcu_io: Got unhandled mavlink message ID %d", msg.msgid);
-    break;
-  }
+//  switch (msg.msgid)
+//  {
+//  case MAVLINK_MSG_ID_HEARTBEAT:
+//    handle_heartbeat_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_COMMAND_ACK:
+//    handle_command_ack_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_STATUSTEXT:
+//    handle_statustext_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_ATTITUDE:
+//    handle_attitude_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_SMALL_IMU:
+//    handle_small_imu_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_SMALL_MAG:
+//    handle_small_mag_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
+//    handle_servo_output_raw_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_RC_CHANNELS:
+//    handle_rc_channels_raw_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_DIFF_PRESSURE:
+//    handle_diff_pressure_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_NAMED_VALUE_INT:
+//    handle_named_value_int_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_NAMED_VALUE_FLOAT:
+//    handle_named_value_float_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_NAMED_COMMAND_STRUCT:
+//    handle_named_command_struct_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_SMALL_BARO:
+//    handle_small_baro_msg(msg);
+//    break;
+//  case MAVLINK_MSG_ID_DISTANCE_SENSOR:
+//    handle_distance_sensor(msg);
+//    break;
+//  default:
+//    ROS_DEBUG("fcu_io: Got unhandled mavlink message ID %d", msg.msgid);
+//    break;
+//  }
 }
 
 void fcuIO::on_new_param_received(std::string name, double value)

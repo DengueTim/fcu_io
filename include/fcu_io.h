@@ -3,8 +3,8 @@
  * \author Daniel Koch <daniel.koch@byu.edu>
  */
 
-#ifndef FCU_IO_MAVROSFLIGHT_ROS_H
-#define FCU_IO_MAVROSFLIGHT_ROS_H
+#ifndef FCU_IO_BB_ROS_H
+#define FCU_IO_BB_ROS_H
 
 #include <map>
 #include <string>
@@ -29,22 +29,14 @@
 #include <fcu_io/ParamGet.h>
 #include <fcu_io/ParamSet.h>
 
-#include <mavrosflight/mavrosflight.h>
-#include <mavrosflight/mavlink_listener_interface.h>
-#include <mavrosflight/param_listener_interface.h>
-
 namespace fcu_io
 {
 
-class fcuIO :
-  public mavrosflight::MavlinkListenerInterface,
-  public mavrosflight::ParamListenerInterface
+class fcuIO
 {
 public:
   fcuIO();
   ~fcuIO();
-
-  virtual void handle_mavlink_message(const mavlink_message_t &msg);
 
   virtual void on_new_param_received(std::string name, double value);
   virtual void on_param_value_updated(std::string name, double value);
@@ -52,21 +44,7 @@ public:
 
 private:
 
-  // handle mavlink messages
-  void handle_heartbeat_msg(const mavlink_message_t &msg);
-  void handle_command_ack_msg(const mavlink_message_t &msg);
-  void handle_statustext_msg(const mavlink_message_t &msg);
-  void handle_attitude_msg(const mavlink_message_t &msg);
-  void handle_small_imu_msg(const mavlink_message_t &msg);
-  void handle_servo_output_raw_msg(const mavlink_message_t &msg);
-  void handle_rc_channels_raw_msg(const mavlink_message_t &msg);
-  void handle_diff_pressure_msg(const mavlink_message_t &msg);
-  void handle_small_baro_msg(const mavlink_message_t &msg);
-  void handle_small_mag_msg(const mavlink_message_t &msg);
-  void handle_named_value_int_msg(const mavlink_message_t &msg);
-  void handle_named_value_float_msg(const mavlink_message_t &msg);
-  void handle_named_command_struct_msg(const mavlink_message_t &msg);
-  void handle_distance_sensor(const mavlink_message_t &msg);
+  void handle_blackbox_msg(const void &msg);
 
   // ROS message callbacks
   void commandCallback(fcu_common::ExtendedCommand::ConstPtr msg);
@@ -115,13 +93,8 @@ private:
   ros::ServiceServer imu_calibrate_bias_srv_;
   ros::ServiceServer imu_calibrate_temp_srv_;
   ros::ServiceServer calibrate_rc_srv_;
-
-  mavrosflight::MavROSflight *mavrosflight_;
-  mavrosflight::sensors::DifferentialPressure diff_pressure_;
-  mavrosflight::sensors::Imu imu_;
-  mavrosflight::sensors::Baro baro_;
 };
 
 } // namespace fcu_io
 
-#endif // FCU_IO_MAVROSFLIGHT_ROS_H
+#endif // FCU_IO_BB_ROS_H
