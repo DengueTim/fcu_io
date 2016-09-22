@@ -1,3 +1,5 @@
+This fork is a hack to get basic IMU readings from a Sparky flight controller running a hacked version of CleanFlight.  The idea is to replace Mavlink with Blackbox for getting data from the FC. How data is send to the FC is to be decided...   The orginal fcu_io project with a NAZE running ROSFlight a superior approach in so many ways.
+
 # fcu_io2
 ROS Driver for [ROSflight2](https://github.com/BYU-MAGICC/ROSflight2 "ROSflight2").  This package provides high-bandwidth access to sensors and actuators on an embedded flight controller as ROS topics, and the ability to change flight controller parameters via the ROS service API.  This is _incompatible_ with ROSflight1.0.  While ROSflight was originally based on the popular [cleanflight](https://github.com/cleanflight/cleanflight) and [baseflight](https://github.com/multiwii/baseflight)  We switched from using MultiWii Serial Protocol (MSP) to MAVLink to get more robust integrity checking and the ability to support streams.  This new system has demonstrated sensor stream rates of more than 10 times those achieved by the MSP system.
 
