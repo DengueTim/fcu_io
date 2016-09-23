@@ -1,9 +1,7 @@
 #ifndef BLACKBOX_SERIAL_H
 #define BLACKBOX_SERIAL_H
 
-#include <blackbox/listener_interface.h>
-#include <blackbox/serial_exception.h>
-
+#include <blackbox/serial_listener.h>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/function.hpp>
@@ -11,10 +9,12 @@
 #include <list>
 #include <string>
 #include <vector>
+#include <exception>
 
 #include <stdint.h>
 
 #define SERIAL_READ_BUF_SIZE 256
+#define SERIAL_WRITE_BUF_SIZE 256
 
 namespace blackbox
 {
@@ -27,17 +27,17 @@ public:
 
   ~Serial();
 
-  void register_listener(ListenerInterface * const listener);
+  void register_listener(SerialListener * const listener);
 
-  void unregister_listener(ListenerInterface * const listener);
+  void unregister_listener(SerialListener * const listener);
 
-  void send_message(std::string msg);
+  void send_data(const uint8_t* const data, const size_t length);
 
 private:
 
   struct WriteBuffer
   {
-    uint8_t data[MAX_PACKET_LEN];
+    uint8_t data[SERIAL_WRITE_BUF_SIZE];
     size_t len;
     size_t pos;
 
@@ -45,7 +45,7 @@ private:
 
     WriteBuffer(const uint8_t * buf, uint16_t len) : len(len), pos(0)
     {
-      assert(len <= MAX_PACKET_LEN); //! \todo Do something less catastrophic here
+      assert(len <= SERIAL_WRITE_BUF_SIZE); //! \todo Do something less catastrophic here
       memcpy(data, buf, len);
     }
 
@@ -79,7 +79,7 @@ private:
   void close();
 
 
-  std::vector<BlackboxListenerInterface*> listeners_;
+  std::vector<SerialListener*> listeners_;
 
   boost::asio::io_service io_service_;
   boost::asio::serial_port serial_port_;

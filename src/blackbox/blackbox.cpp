@@ -1,19 +1,20 @@
 #include <string>
 #include <stdint.h>
-#include <eigen3/Eigen/Core>
-#include <eigen3/Eigen/Dense>
 
-#include "fcu_io.h"
+#include "blackbox/blackbox.h"
 
-namespace blackbox
-{
+namespace blackbox {
 
-blackbox::Blackbox()
-{
-	 serial.register_listener(this);
+Blackbox::Blackbox(std::string port, int baud_rate, BlackboxListener &listener) {
+	// serial.register_listener(this);
 	//  mavrosflight_->param.register_param_listener(this);
 }
 
-blackbox::~Blackbox(){
+Blackbox::~Blackbox(){
+
+}
+
+void Blackbox::serial_data_received(const uint8_t* data, const size_t length) {
+}
 
 }

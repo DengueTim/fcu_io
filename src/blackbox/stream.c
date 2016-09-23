@@ -178,14 +178,6 @@ mmapStream_t* streamCreate(int fd)
 {
     mmapStream_t *result = malloc(sizeof(*result));
 
-    if (!mmap_file(&result->mapping, fd)) {
-        free(result);
-        return 0;
-    }
-
-    result->data = result->mapping.data;
-    result->size = result->mapping.size;
-
     result->start = result->data;
     result->pos = result->start;
     result->bitPos = CHAR_BIT - 1;
@@ -197,6 +189,5 @@ mmapStream_t* streamCreate(int fd)
 
 void streamDestroy(mmapStream_t *stream)
 {
-    munmap_file(&stream->mapping);
     free(stream);
 }

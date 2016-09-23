@@ -35,7 +35,7 @@ fcuIO::fcuIO()
 
   try
   {
-    blackbox_ = new blackbox::Blackbox(port, baud_rate);
+    blackbox_ = new blackbox::Blackbox(port, baud_rate, this);
   }
   catch (std::exception e)
   {
@@ -53,8 +53,8 @@ fcuIO::~fcuIO()
 //  delete mavrosflight_;
 }
 
-void fcuIO::handle_blackbox_message(const std::string msg)
-{
+//void fcuIO::handle_blackbox_message(const std::string msg)
+//{
 //  switch (msg.msgid)
 //  {
 //  case MAVLINK_MSG_ID_HEARTBEAT:
@@ -103,7 +103,7 @@ void fcuIO::handle_blackbox_message(const std::string msg)
 //    ROS_DEBUG("fcu_io: Got unhandled mavlink message ID %d", msg.msgid);
 //    break;
 //  }
-}
+//}
 
 //void fcuIO::on_new_param_received(std::string name, double value)
 //{

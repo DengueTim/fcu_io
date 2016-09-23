@@ -60,6 +60,7 @@ add_executable(fcu_io_node
   src/fcu_io.cpp
   src/blackbox/battery.c
   src/blackbox/blackbox_fielddefs.c
+  src/blackbox/blackbox.cpp
   src/blackbox/datapoints.c
   src/blackbox/decoders.c
   src/blackbox/encoder_testbed.c
@@ -68,6 +69,7 @@ add_executable(fcu_io_node
   src/blackbox/gpxwriter.c
   src/blackbox/imu.c
   src/blackbox/parser.c
+  src/blackbox/serial.cpp
   src/blackbox/stats.c
   src/blackbox/stream.c
   src/blackbox/tools.c

@@ -30,15 +30,17 @@
 #include <fcu_io/ParamSet.h>
 
 #include <blackbox/blackbox.h>
-#include <blackbox/blackbox_serial_listener.h>
+#include <blackbox/blackbox_listener.h>
 
 namespace fcu_io
 {
 
-class fcuIO {
+class fcuIO : public blackbox::BlackboxListener {
 public:
   fcuIO();
-  ~fcuIO();
+  virtual ~fcuIO();
+
+  void handle_blackbox_message(const std::string msg);
 
   virtual void on_new_param_received(std::string name, double value);
   virtual void on_param_value_updated(std::string name, double value);
