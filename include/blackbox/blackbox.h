@@ -19,14 +19,15 @@ namespace blackbox
 class Blackbox : public SerialListener
 {
 public:
-  Blackbox(std::string port, int baud_rate, BlackboxListener &listener);
+  Blackbox(std::string port, int baud_rate, BlackboxListener * const listener);
 
   ~Blackbox();
 
   void serial_data_received(const uint8_t* data, const size_t length);
 
 private:
-  Serial serial;
+  Serial serial_;
+  BlackboxListener* listener_;
 };
 
 }

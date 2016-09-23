@@ -40,7 +40,7 @@ public:
   fcuIO();
   virtual ~fcuIO();
 
-  void handle_blackbox_message(const std::string msg);
+  virtual void handle_blackbox_message(const std::string msg);
 
   virtual void on_new_param_received(std::string name, double value);
   virtual void on_param_value_updated(std::string name, double value);
