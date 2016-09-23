@@ -1,5 +1,5 @@
 #include <string.h>
-#include "tools.h"
+#include "blackbox/tools.h"
 
 int32_t signExtend24Bit(uint32_t u)
 {

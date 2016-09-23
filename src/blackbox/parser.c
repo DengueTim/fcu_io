@@ -19,11 +19,10 @@
 #include <ctype.h>
 #include <assert.h>
 
-#include "platform.h"
-#include "parser.h"
-#include "tools.h"
-#include "stream.h"
-#include "decoders.h"
+#include "blackbox/parser.h"
+#include "blackbox/tools.h"
+#include "blackbox/stream.h"
+#include "blackbox/decoders.h"
 
 #define LOG_START_MARKER "H Product:Blackbox flight data recorder by Nicholas Sherlock\n"
 

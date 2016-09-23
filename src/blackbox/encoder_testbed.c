@@ -19,9 +19,9 @@
     #include <getopt.h>
 #endif
 
-#include "parser.h"
-#include "encoder_testbed_io.h"
-#include "tools.h"
+#include "blackbox/parser.h"
+#include "blackbox/encoder_testbed_io.h"
+#include "blackbox/tools.h"
 
 #define MAG
 #define BARO

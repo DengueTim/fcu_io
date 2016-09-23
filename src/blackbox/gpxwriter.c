@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "gpxwriter.h"
+#include "blackbox/gpxwriter.h"
 
 #define GPS_DEGREES_DIVIDER 10000000L
 

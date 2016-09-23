@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "expo.h"
+#include "blackbox/expo.h"
 
 struct expoCurve_t {
     int offset;

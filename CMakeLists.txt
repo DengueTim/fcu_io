@@ -58,6 +58,20 @@ include_directories(
 add_executable(fcu_io_node
   src/fcu_io_node.cpp
   src/fcu_io.cpp
+  src/blackbox/battery.c
+  src/blackbox/blackbox_fielddefs.c
+  src/blackbox/datapoints.c
+  src/blackbox/decoders.c
+  src/blackbox/encoder_testbed.c
+  src/blackbox/encoder_testbed_io.c
+  src/blackbox/expo.c
+  src/blackbox/gpxwriter.c
+  src/blackbox/imu.c
+  src/blackbox/parser.c
+  src/blackbox/stats.c
+  src/blackbox/stream.c
+  src/blackbox/tools.c
+  src/blackbox/units.c
 )
 add_dependencies(fcu_io_node fcu_common_generate_messages_cpp)
 add_dependencies(fcu_io_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

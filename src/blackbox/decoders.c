@@ -1,5 +1,5 @@
-#include "decoders.h"
-#include "tools.h"
+#include "blackbox/decoders.h"
+#include "blackbox/tools.h"
 
 void streamReadTag2_3S32(mmapStream_t *stream, int32_t *values)
 {

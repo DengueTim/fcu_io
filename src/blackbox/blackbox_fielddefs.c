@@ -1,4 +1,4 @@
-#include "blackbox_fielddefs.h"
+#include "blackbox/blackbox_fielddefs.h"
 
 const char * const FLIGHT_LOG_FLIGHT_MODE_NAME[] = {
     "ANGLE_MODE",

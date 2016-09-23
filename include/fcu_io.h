@@ -3,8 +3,8 @@
  * \author Daniel Koch <daniel.koch@byu.edu>
  */
 
-#ifndef FCU_IO_BB_ROS_H
-#define FCU_IO_BB_ROS_H
+#ifndef FCU_IO_BLACKBOX_ROS_H
+#define FCU_IO_BLACKBOX_ROS_H
 
 #include <map>
 #include <string>
@@ -29,11 +29,13 @@
 #include <fcu_io/ParamGet.h>
 #include <fcu_io/ParamSet.h>
 
+#include <blackbox/blackbox.h>
+#include <blackbox/blackbox_serial_listener.h>
+
 namespace fcu_io
 {
 
-class fcuIO
-{
+class fcuIO {
 public:
   fcuIO();
   ~fcuIO();
@@ -43,9 +45,6 @@ public:
   virtual void on_params_saved_change(bool unsaved_changes);
 
 private:
-
-  void handle_blackbox_msg(const void &msg);
-
   // ROS message callbacks
   void commandCallback(fcu_common::ExtendedCommand::ConstPtr msg);
 
@@ -93,8 +92,10 @@ private:
   ros::ServiceServer imu_calibrate_bias_srv_;
   ros::ServiceServer imu_calibrate_temp_srv_;
   ros::ServiceServer calibrate_rc_srv_;
+
+  blackbox::Blackbox *blackbox_;
 };
 
 } // namespace fcu_io
 
-#endif // FCU_IO_BB_ROS_H
+#endif // FCU_IO_BLACKBOX_ROS_H

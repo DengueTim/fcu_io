@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "battery.h"
+#include "blackbox/battery.h"
 
 #define SECONDS_PER_HOUR 3600u
 #define MICROSECONDS_PER_SECOND 1000000u

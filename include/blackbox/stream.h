@@ -1,11 +1,10 @@
 #ifndef STREAM_H_
 #define STREAM_H_
 
-#include "platform.h"
+#include <stddef.h>
+#include <stdbool.h>
 
 typedef struct mmapStream_t {
-    fileMapping_t mapping;
-
     //The start of the entire data block
     const char *data;
 

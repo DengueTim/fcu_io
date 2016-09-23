@@ -2,9 +2,9 @@
 #include <stdarg.h>
 #include <limits.h>
 
-#include "tools.h"
+#include "blackbox/tools.h"
 
-#include "encoder_testbed_io.h"
+#include "blackbox/encoder_testbed_io.h"
 
 uint32_t blackboxWrittenBytes;
 

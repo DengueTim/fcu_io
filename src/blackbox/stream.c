@@ -5,10 +5,9 @@
 #include <limits.h>
 #include <assert.h>
 
-#include "platform.h"
-#include "tools.h"
+#include "blackbox/tools.h"
 
-#include "stream.h"
+#include "blackbox/stream.h"
 
 uint32_t streamReadUnsignedVB(mmapStream_t *stream)
 {

@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "datapoints.h"
-#include "parser.h"
+#include "blackbox/datapoints.h"
+#include "blackbox/parser.h"
 
 datapoints_t *datapointsCreate(int fieldCount, char **fieldNames, int frameCapacity)
 {

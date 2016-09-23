@@ -8,7 +8,7 @@
 
 #include <math.h>
 
-#include "imu.h"
+#include "blackbox/imu.h"
 
 // Convert degrees to radians
 #define RAD    (M_PI / 180.0f)

@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include "stats.h"
+#include "blackbox/stats.h"
 
 /*
  * Compute summary statistics from a series of data in an online fashion.
