@@ -63,8 +63,6 @@ add_executable(fcu_io_node
   src/blackbox/blackbox.cpp
   src/blackbox/datapoints.c
   src/blackbox/decoders.c
-  src/blackbox/encoder_testbed.c
-  src/blackbox/encoder_testbed_io.c
   src/blackbox/expo.c
   src/blackbox/gpxwriter.c
   src/blackbox/imu.c

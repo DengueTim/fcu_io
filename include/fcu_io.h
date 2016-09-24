@@ -42,23 +42,23 @@ public:
 
   virtual void handle_blackbox_message(const std::string msg);
 
-  virtual void on_new_param_received(std::string name, double value);
-  virtual void on_param_value_updated(std::string name, double value);
-  virtual void on_params_saved_change(bool unsaved_changes);
+//  virtual void on_new_param_received(std::string name, double value);
+//  virtual void on_param_value_updated(std::string name, double value);
+//  virtual void on_params_saved_change(bool unsaved_changes);
 
 private:
   // ROS message callbacks
   void commandCallback(fcu_common::ExtendedCommand::ConstPtr msg);
 
-  // ROS service callbacks
-  bool paramGetSrvCallback(fcu_io::ParamGet::Request &req, fcu_io::ParamGet::Response &res);
-  bool paramSetSrvCallback(fcu_io::ParamSet::Request &req, fcu_io::ParamSet::Response &res);
-  bool paramWriteSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
-  bool paramSaveToFileCallback(fcu_io::ParamFile::Request &req, fcu_io::ParamFile::Response &res);
-  bool paramLoadFromFileCallback(fcu_io::ParamFile::Request &req, fcu_io::ParamFile::Response &res);
-  bool calibrateImuBiasSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
-  bool calibrateImuTempSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
-  bool calibrateRCTrimSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
+//  // ROS service callbacks
+//  bool paramGetSrvCallback(fcu_io::ParamGet::Request &req, fcu_io::ParamGet::Response &res);
+//  bool paramSetSrvCallback(fcu_io::ParamSet::Request &req, fcu_io::ParamSet::Response &res);
+//  bool paramWriteSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
+//  bool paramSaveToFileCallback(fcu_io::ParamFile::Request &req, fcu_io::ParamFile::Response &res);
+//  bool paramLoadFromFileCallback(fcu_io::ParamFile::Request &req, fcu_io::ParamFile::Response &res);
+//  bool calibrateImuBiasSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
+//  bool calibrateImuTempSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
+//  bool calibrateRCTrimSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
 
   // helpers
   template<class T> inline T saturate(T value, T min, T max)

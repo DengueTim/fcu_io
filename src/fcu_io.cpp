@@ -17,16 +17,16 @@ fcuIO::fcuIO()
 {
   command_sub_ = nh_.subscribe("extended_command", 1, &fcuIO::commandCallback, this);
 
-  unsaved_params_pub_ = nh_.advertise<std_msgs::Bool>("unsaved_params", 1, true);
-
-  param_get_srv_ = nh_.advertiseService("param_get", &fcuIO::paramGetSrvCallback, this);
-  param_set_srv_ = nh_.advertiseService("param_set", &fcuIO::paramSetSrvCallback, this);
-  param_write_srv_ = nh_.advertiseService("param_write", &fcuIO::paramWriteSrvCallback, this);
-  param_save_to_file_srv_ = nh_.advertiseService("param_save_to_file", &fcuIO::paramSaveToFileCallback, this);
-  param_load_from_file_srv_ = nh_.advertiseService("param_load_from_file", &fcuIO::paramLoadFromFileCallback, this);
-  imu_calibrate_bias_srv_ = nh_.advertiseService("calibrate_imu_bias", &fcuIO::calibrateImuBiasSrvCallback, this);
-  imu_calibrate_temp_srv_ = nh_.advertiseService("calibrate_imu_temp", &fcuIO::calibrateImuTempSrvCallback, this);
-  calibrate_rc_srv_ = nh_.advertiseService("calibrate_rc_trim", &fcuIO::calibrateRCTrimSrvCallback, this);
+//  unsaved_params_pub_ = nh_.advertise<std_msgs::Bool>("unsaved_params", 1, true);
+//
+//  param_get_srv_ = nh_.advertiseService("param_get", &fcuIO::paramGetSrvCallback, this);
+//  param_set_srv_ = nh_.advertiseService("param_set", &fcuIO::paramSetSrvCallback, this);
+//  param_write_srv_ = nh_.advertiseService("param_write", &fcuIO::paramWriteSrvCallback, this);
+//  param_save_to_file_srv_ = nh_.advertiseService("param_save_to_file", &fcuIO::paramSaveToFileCallback, this);
+//  param_load_from_file_srv_ = nh_.advertiseService("param_load_from_file", &fcuIO::paramLoadFromFileCallback, this);
+//  imu_calibrate_bias_srv_ = nh_.advertiseService("calibrate_imu_bias", &fcuIO::calibrateImuBiasSrvCallback, this);
+//  imu_calibrate_temp_srv_ = nh_.advertiseService("calibrate_imu_temp", &fcuIO::calibrateImuTempSrvCallback, this);
+//  calibrate_rc_srv_ = nh_.advertiseService("calibrate_rc_trim", &fcuIO::calibrateRCTrimSrvCallback, this);
 
   ros::NodeHandle nh_private("~");
   std::string port = nh_private.param<std::string>("port", "/dev/ttyUSB0");
@@ -53,8 +53,8 @@ fcuIO::~fcuIO()
 //  delete mavrosflight_;
 }
 
-//void fcuIO::handle_blackbox_message(const std::string msg)
-//{
+void fcuIO::handle_blackbox_message(const std::string msg)
+{
 //  switch (msg.msgid)
 //  {
 //  case MAVLINK_MSG_ID_HEARTBEAT:
@@ -103,7 +103,7 @@ fcuIO::~fcuIO()
 //    ROS_DEBUG("fcu_io: Got unhandled mavlink message ID %d", msg.msgid);
 //    break;
 //  }
-//}
+}
 
 //void fcuIO::on_new_param_received(std::string name, double value)
 //{
@@ -533,38 +533,18 @@ fcuIO::~fcuIO()
 //}
 //
 //
-//void fcuIO::commandCallback(fcu_common::ExtendedCommand::ConstPtr msg)
-//{
-//  //! \todo these are hard-coded to match right now; may want to replace with something more robust
-//  OFFBOARD_CONTROL_MODE mode = (OFFBOARD_CONTROL_MODE) msg->mode;
-//  OFFBOARD_CONTROL_IGNORE ignore = (OFFBOARD_CONTROL_IGNORE) msg->ignore;
-//
-//  float x = msg->x;
-//  float y = msg->y;
-//  float z = msg->z;
-//  float F = msg->F;
-//
-//  switch (mode)
-//  {
-//  case MODE_PASS_THROUGH:
-//    x = saturate(x, -1.0f, 1.0f);
-//    y = saturate(y, -1.0f, 1.0f);
-//    z = saturate(z, -1.0f, 1.0f);
-//    F = saturate(F, 0.0f, 1.0f);
-//    break;
-//  case MODE_ROLLRATE_PITCHRATE_YAWRATE_THROTTLE:
-//  case MODE_ROLL_PITCH_YAWRATE_THROTTLE:
-//    F = saturate(F, 0.0f, 1.0f);
-//    break;
-//  case MODE_ROLL_PITCH_YAWRATE_ALTITUDE:
-//    break;
-//  }
-//
-//  mavlink_message_t mavlink_msg;
-//  mavlink_msg_offboard_control_pack(1, 50, &mavlink_msg,
-//                                    mode, ignore, x, y, z, F);
-//  mavrosflight_->serial.send_message(mavlink_msg);
-//}
+void fcuIO::commandCallback(fcu_common::ExtendedCommand::ConstPtr msg)
+{
+  assert(msg->mode == 2);
+  assert(msg->ignore == 0);
+
+  float x = msg->x;
+  float y = msg->y;
+  float z = msg->z;
+  float F = saturate(msg->F, 0.0f, 1.0f);
+
+  blackbox_->serial_data_send(x, y, z, F);
+}
 //
 //bool fcuIO::paramGetSrvCallback(fcu_io::ParamGet::Request &req, fcu_io::ParamGet::Response &res)
 //{

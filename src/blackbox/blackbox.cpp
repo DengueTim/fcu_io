@@ -19,4 +19,7 @@ Blackbox::~Blackbox(){
 void Blackbox::serial_data_received(const uint8_t* data, const size_t length) {
 }
 
+void Blackbox::serial_data_send(float roll, float pitch, float yaw, float trottle) {
+}
+
 }

@@ -25,6 +25,7 @@ public:
 
   void serial_data_received(const uint8_t* data, const size_t length);
 
+  void serial_data_send(float roll, float pitch, float yaw, float trottle);
 private:
   Serial serial_;
   BlackboxListener* listener_;
