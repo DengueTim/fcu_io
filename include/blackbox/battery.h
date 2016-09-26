@@ -2,10 +2,10 @@
 #define BATTERY_H_
 
 typedef struct currentMeterState_t {
-    uint32_t lastTime;
+	uint32_t lastTime;
 
-    double energyMilliampHours;
-    int32_t currentMilliamps;
+	double energyMilliampHours;
+	int32_t currentMilliamps;
 } currentMeterState_t;
 
 void currentMeterInit(currentMeterState_t *state);

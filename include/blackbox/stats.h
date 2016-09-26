@@ -2,8 +2,8 @@
 #define STATS_H_
 
 typedef struct seriesStats_t {
-    double m, s;
-    int count;
+	double m, s;
+	int count;
 } seriesStats_t;
 
 void seriesStats_init(seriesStats_t *stats);

@@ -8,7 +8,7 @@ namespace blackbox {
 
 class SerialListener {
 public:
-	virtual void serial_data_received(const uint8_t* const data, const size_t length) = 0;
+	virtual void serial_data_received(const uint8_t byte) = 0;
 	virtual ~SerialListener() {};
 };
 

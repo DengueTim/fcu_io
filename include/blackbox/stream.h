@@ -5,20 +5,20 @@
 #include <stdbool.h>
 
 typedef struct mmapStream_t {
-    //The start of the entire data block
-    const char *data;
+	//The start of the entire data block
+	const char *data;
 
-    //The length of the entire data block
-    size_t size;
+	//The length of the entire data block
+	size_t size;
 
-    //The section of the file which is currently being examined by the stream:
-    const char *start, *end, *pos;
+	//The section of the file which is currently being examined by the stream:
+	const char *start, *end, *pos;
 
-    //When reading bit-by-bit, the index of the next bit to be read within the byte at pos (from the high bit of index 7..0)
-    int bitPos;
+	//When reading bit-by-bit, the index of the next bit to be read within the byte at pos (from the high bit of index 7..0)
+	int bitPos;
 
-    //Set to true if we attempt to read from the log when it is already exhausted
-    bool eof;
+	//Set to true if we attempt to read from the log when it is already exhausted
+	bool eof;
 } mmapStream_t;
 
 mmapStream_t* streamCreate(int fd);

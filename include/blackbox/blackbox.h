@@ -13,22 +13,20 @@
 #include <stdint.h>
 #include <string>
 
-namespace blackbox
-{
+namespace blackbox {
 
-class Blackbox : public SerialListener
-{
+class Blackbox : public SerialListener {
 public:
-  Blackbox(std::string port, int baud_rate, BlackboxListener * const listener);
+	Blackbox(std::string port, int baud_rate, BlackboxListener * const listener);
 
-  ~Blackbox();
+	~Blackbox();
 
-  void serial_data_received(const uint8_t* data, const size_t length);
+	void serial_data_received(const uint8_t byte);
 
-  void serial_data_send(float roll, float pitch, float yaw, float trottle);
+	void serial_data_send(float roll, float pitch, float yaw, float trottle);
 private:
-  Serial serial_;
-  BlackboxListener* listener_;
+	Serial serial_;
+	BlackboxListener* listener_;
 };
 
 }

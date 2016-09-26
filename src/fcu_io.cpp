@@ -10,99 +10,60 @@
 
 #include "fcu_io.h"
 
-namespace fcu_io
-{
+namespace fcu_io {
 
-fcuIO::fcuIO()
-{
-  command_sub_ = nh_.subscribe("extended_command", 1, &fcuIO::commandCallback, this);
+fcuIO::fcuIO() {
+	command_sub_ = nh_.subscribe("extended_command", 1, &fcuIO::commandCallback, this);
 
-//  unsaved_params_pub_ = nh_.advertise<std_msgs::Bool>("unsaved_params", 1, true);
+	unsaved_params_pub_ = nh_.advertise<std_msgs::Bool>("unsaved_params", 1, true);
+
+	param_get_srv_ = nh_.advertiseService("param_get", &fcuIO::paramGetSrvCallback, this);
+	param_set_srv_ = nh_.advertiseService("param_set", &fcuIO::paramSetSrvCallback, this);
+	param_write_srv_ = nh_.advertiseService("param_write", &fcuIO::paramWriteSrvCallback, this);
+	param_save_to_file_srv_ = nh_.advertiseService("param_save_to_file", &fcuIO::paramSaveToFileCallback, this);
+	param_load_from_file_srv_ = nh_.advertiseService("param_load_from_file", &fcuIO::paramLoadFromFileCallback, this);
+	imu_calibrate_bias_srv_ = nh_.advertiseService("calibrate_imu_bias", &fcuIO::calibrateImuBiasSrvCallback, this);
+	imu_calibrate_temp_srv_ = nh_.advertiseService("calibrate_imu_temp", &fcuIO::calibrateImuTempSrvCallback, this);
+	calibrate_rc_srv_ = nh_.advertiseService("calibrate_rc_trim", &fcuIO::calibrateRCTrimSrvCallback, this);
+
+	ros::NodeHandle nh_private("~");
+	std::string port = nh_private.param<std::string>("port", "/dev/ttyUSB0");
+	int baud_rate = nh_private.param<int>("baud_rate", 115200);
+
+	try {
+		blackbox_ = new blackbox::Blackbox(port, baud_rate, this);
+	} catch (std::exception e) {
+		ROS_FATAL("%s", e.what());
+		ros::shutdown();
+	}
+
+	std_msgs::Bool unsaved_msg;
+	unsaved_msg.data = false;
+	unsaved_params_pub_.publish(unsaved_msg);
+}
+
+fcuIO::~fcuIO() {
+	delete blackbox_;
+}
+
+void fcuIO::handle_blackbox_message(const uint8_t byte) {
+//	ROS_INFO("F %02X", byte);
+//	mavlink_attitude_t attitude;
+//	mavlink_msg_attitude_decode(&msg, &attitude);
 //
-//  param_get_srv_ = nh_.advertiseService("param_get", &fcuIO::paramGetSrvCallback, this);
-//  param_set_srv_ = nh_.advertiseService("param_set", &fcuIO::paramSetSrvCallback, this);
-//  param_write_srv_ = nh_.advertiseService("param_write", &fcuIO::paramWriteSrvCallback, this);
-//  param_save_to_file_srv_ = nh_.advertiseService("param_save_to_file", &fcuIO::paramSaveToFileCallback, this);
-//  param_load_from_file_srv_ = nh_.advertiseService("param_load_from_file", &fcuIO::paramLoadFromFileCallback, this);
-//  imu_calibrate_bias_srv_ = nh_.advertiseService("calibrate_imu_bias", &fcuIO::calibrateImuBiasSrvCallback, this);
-//  imu_calibrate_temp_srv_ = nh_.advertiseService("calibrate_imu_temp", &fcuIO::calibrateImuTempSrvCallback, this);
-//  calibrate_rc_srv_ = nh_.advertiseService("calibrate_rc_trim", &fcuIO::calibrateRCTrimSrvCallback, this);
-
-  ros::NodeHandle nh_private("~");
-  std::string port = nh_private.param<std::string>("port", "/dev/ttyUSB0");
-  int baud_rate = nh_private.param<int>("baud_rate", 921600);
-
-
-  try
-  {
-    blackbox_ = new blackbox::Blackbox(port, baud_rate, this);
-  }
-  catch (std::exception e)
-  {
-    ROS_FATAL("%s", e.what());
-    ros::shutdown();
-  }
-
-  std_msgs::Bool unsaved_msg;
-  unsaved_msg.data = false;
-  unsaved_params_pub_.publish(unsaved_msg);
-}
-
-fcuIO::~fcuIO()
-{
-//  delete mavrosflight_;
-}
-
-void fcuIO::handle_blackbox_message(const std::string msg)
-{
-//  switch (msg.msgid)
-//  {
-//  case MAVLINK_MSG_ID_HEARTBEAT:
-//    handle_heartbeat_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_COMMAND_ACK:
-//    handle_command_ack_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_STATUSTEXT:
-//    handle_statustext_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_ATTITUDE:
-//    handle_attitude_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_SMALL_IMU:
-//    handle_small_imu_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_SMALL_MAG:
-//    handle_small_mag_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
-//    handle_servo_output_raw_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_RC_CHANNELS:
-//    handle_rc_channels_raw_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_DIFF_PRESSURE:
-//    handle_diff_pressure_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_NAMED_VALUE_INT:
-//    handle_named_value_int_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_NAMED_VALUE_FLOAT:
-//    handle_named_value_float_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_NAMED_COMMAND_STRUCT:
-//    handle_named_command_struct_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_SMALL_BARO:
-//    handle_small_baro_msg(msg);
-//    break;
-//  case MAVLINK_MSG_ID_DISTANCE_SENSOR:
-//    handle_distance_sensor(msg);
-//    break;
-//  default:
-//    ROS_DEBUG("fcu_io: Got unhandled mavlink message ID %d", msg.msgid);
-//    break;
-//  }
+//	fcu_common::Attitude attitude_msg;
+//	attitude_msg.header.stamp = mavrosflight_->time.get_ros_time_ms(attitude.time_boot_ms);
+//	attitude_msg.roll = attitude.roll;
+//	attitude_msg.pitch = attitude.pitch;
+//	attitude_msg.yaw = attitude.yaw;
+//	attitude_msg.p = attitude.rollspeed;
+//	attitude_msg.q = attitude.pitchspeed;
+//	attitude_msg.r = attitude.yawspeed;
+//
+//	if (attitude_pub_.getTopic().empty()) {
+//		attitude_pub_ = nh_.advertise<fcu_common::Attitude>("attitude", 1);
+//	}
+//	attitude_pub_.publish(attitude_msg);
 }
 
 //void fcuIO::on_new_param_received(std::string name, double value)
@@ -131,55 +92,7 @@ void fcuIO::handle_blackbox_message(const std::string msg)
 //  }
 //}
 //
-//void fcuIO::handle_heartbeat_msg(const mavlink_message_t &msg)
-//{
-//  ROS_INFO_ONCE("Got HEARTBEAT, connected.");
-//
-//  static int prev_armed_state = 0;
-//  static int prev_control_mode = 0;
-//  mavlink_heartbeat_t heartbeat;
-//  mavlink_msg_heartbeat_decode(&msg, &heartbeat);
-//
-//  // Print if change in armed_state
-//  if(heartbeat.base_mode != prev_armed_state)
-//  {
-//    if(heartbeat.base_mode == MAV_MODE_MANUAL_ARMED)
-//      ROS_WARN("FCU ARMED");
-//    else if(heartbeat.base_mode == MAV_MODE_MANUAL_DISARMED)
-//      ROS_WARN("FCU DISARMED");
-//    prev_armed_state = heartbeat.base_mode;
-//  }
-//  else if(heartbeat.base_mode == MAV_MODE_ENUM_END)
-//    ROS_ERROR_THROTTLE(1,"FCU FAILSAFE");
-//
-//
-//  // Print if change in control mode
-//  if(heartbeat.custom_mode != prev_control_mode)
-//  {
-//    std::string mode_string;
-//    switch(heartbeat.custom_mode)
-//    {
-//      case MODE_PASS_THROUGH:
-//        mode_string = "PASS_THROUGH";
-//        break;
-//      case MODE_ROLLRATE_PITCHRATE_YAWRATE_THROTTLE:
-//        mode_string = "RATE";
-//        break;
-//      case MODE_ROLL_PITCH_YAWRATE_THROTTLE:
-//        mode_string = "ANGLE";
-//        break;
-//      case MODE_ROLL_PITCH_YAWRATE_ALTITUDE:
-//        mode_string = "ALTITUDE";
-//        break;
-//      default:
-//        mode_string = "UNKNOWN";
-//    }
-//    ROS_WARN_STREAM("FCU now in " << mode_string << " mode");
-//    prev_control_mode = heartbeat.custom_mode;
-//  }
-//
-//
-//}
+
 //
 //void fcuIO::handle_command_ack_msg(const mavlink_message_t &msg)
 //{
@@ -533,91 +446,84 @@ void fcuIO::handle_blackbox_message(const std::string msg)
 //}
 //
 //
-void fcuIO::commandCallback(fcu_common::ExtendedCommand::ConstPtr msg)
-{
-  assert(msg->mode == 2);
-  assert(msg->ignore == 0);
+void fcuIO::commandCallback(fcu_common::ExtendedCommand::ConstPtr msg) {
+	assert(msg->mode == 2);
+	assert(msg->ignore == 0);
 
-  float x = msg->x;
-  float y = msg->y;
-  float z = msg->z;
-  float F = saturate(msg->F, 0.0f, 1.0f);
+	float x = msg->x;
+	float y = msg->y;
+	float z = msg->z;
+	float F = saturate(msg->F, 0.0f, 1.0f);
 
-  blackbox_->serial_data_send(x, y, z, F);
+	blackbox_->serial_data_send(x, y, z, F);
 }
-//
-//bool fcuIO::paramGetSrvCallback(fcu_io::ParamGet::Request &req, fcu_io::ParamGet::Response &res)
-//{
-//  res.exists = mavrosflight_->param.get_param_value(req.name, &res.value);
-//  return true;
-//}
-//
-//bool fcuIO::paramSetSrvCallback(fcu_io::ParamSet::Request &req, fcu_io::ParamSet::Response &res)
-//{
-//  res.exists = mavrosflight_->param.set_param_value(req.name, req.value);
-//  return true;
-//}
-//
-//bool fcuIO::paramWriteSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
-//{
-//  res.success = mavrosflight_->param.write_params();
-//  if (!res.success)
-//  {
-//    res.message = "Request rejected: write already in progress";
-//  }
-//
-//  return true;
-//}
-//
-//bool fcuIO::paramSaveToFileCallback(ParamFile::Request &req, ParamFile::Response &res)
-//{
-//  res.success = mavrosflight_->param.save_to_file(req.filename);
-//  return true;
-//}
-//
-//bool fcuIO::paramLoadFromFileCallback(ParamFile::Request &req, ParamFile::Response &res)
-//{
-//  res.success = mavrosflight_->param.load_from_file(req.filename);
-//  return true;
-//}
-//
-//bool fcuIO::calibrateImuBiasSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
-//{
-//  mavlink_message_t msg;
-//  mavlink_msg_command_int_pack(1, 50, &msg, 1, MAV_COMP_ID_ALL,
-//                               0, MAV_CMD_PREFLIGHT_CALIBRATION, 0, 0, 1, 0, 0, 0, 1, 0, 0);
-//  mavrosflight_->serial.send_message(msg);
-//
-//  res.success = true;
-//  return true;
-//}
-//
-//bool fcuIO::calibrateRCTrimSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
-//{
-//  mavlink_message_t msg;
-//  mavlink_msg_command_int_pack(1, 50, &msg, 1, MAV_COMP_ID_ALL,
-//                               0, MAV_CMD_DO_RC_CALIBRATION, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-//  mavrosflight_->serial.send_message(msg);
-//  res.success = true;
-//  return true;
-//}
-//
-//bool fcuIO::calibrateImuTempSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
-//{
-//  // First, reset the previous calibration
-//  mavrosflight_->param.set_param_value("ACC_X_TEMP_COMP", 0);
-//  mavrosflight_->param.set_param_value("ACC_Y_TEMP_COMP", 0);
-//  mavrosflight_->param.set_param_value("ACC_Z_TEMP_COMP", 0);
-//  mavrosflight_->param.set_param_value("ACC_X_BIAS", 0);
-//  mavrosflight_->param.set_param_value("ACC_Y_BIAS", 0);
-//  mavrosflight_->param.set_param_value("ACC_Z_BIAS", 0);
-//
-//  // tell the IMU to start a temperature calibration
-//  imu_.start_temp_calibration();
-//  ROS_WARN("IMU temperature calibration started");
-//
-//  res.success = true;
-//  return true;
-//}
 
-} // namespace fcu_io
+bool fcuIO::paramGetSrvCallback(fcu_io::ParamGet::Request &req, fcu_io::ParamGet::Response &res) {
+	//res.exists = mavrosflight_->param.get_param_value(req.name, &res.value);
+	res.exists = false;
+	return true;
+}
+
+bool fcuIO::paramSetSrvCallback(fcu_io::ParamSet::Request &req, fcu_io::ParamSet::Response &res) {
+	//res.exists = mavrosflight_->param.set_param_value(req.name, req.value);
+	res.exists = false;
+	return true;
+}
+
+bool fcuIO::paramWriteSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res) {
+	//res.success = mavrosflight_->param.write_params();
+	res.success = false;
+	if (!res.success) {
+		res.message = "Request rejected: write already in progress";
+	}
+
+	return true;
+}
+
+bool fcuIO::paramSaveToFileCallback(ParamFile::Request &req, ParamFile::Response &res) {
+	//res.success = mavrosflight_->param.save_to_file(req.filename);
+	res.success = false;
+	return true;
+}
+
+bool fcuIO::paramLoadFromFileCallback(ParamFile::Request &req, ParamFile::Response &res) {
+	//res.success = mavrosflight_->param.load_from_file(req.filename);
+	res.success = false;
+	return true;
+}
+
+bool fcuIO::calibrateImuBiasSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res) {
+//	mavlink_message_t msg;
+//	mavlink_msg_command_int_pack(1, 50, &msg, 1, MAV_COMP_ID_ALL, 0, MAV_CMD_PREFLIGHT_CALIBRATION, 0, 0, 1, 0, 0, 0, 1, 0, 0);
+//	mavrosflight_->serial.send_message(msg);
+
+	res.success = true;
+	return true;
+}
+
+bool fcuIO::calibrateRCTrimSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res) {
+//	mavlink_message_t msg;
+//	mavlink_msg_command_int_pack(1, 50, &msg, 1, MAV_COMP_ID_ALL, 0, MAV_CMD_DO_RC_CALIBRATION, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+//	mavrosflight_->serial.send_message(msg);
+	res.success = true;
+	return true;
+}
+
+bool fcuIO::calibrateImuTempSrvCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res) {
+	// First, reset the previous calibration
+//	mavrosflight_->param.set_param_value("ACC_X_TEMP_COMP", 0);
+//	mavrosflight_->param.set_param_value("ACC_Y_TEMP_COMP", 0);
+//	mavrosflight_->param.set_param_value("ACC_Z_TEMP_COMP", 0);
+//	mavrosflight_->param.set_param_value("ACC_X_BIAS", 0);
+//	mavrosflight_->param.set_param_value("ACC_Y_BIAS", 0);
+//	mavrosflight_->param.set_param_value("ACC_Z_BIAS", 0);
+
+	// tell the IMU to start a temperature calibration
+//	imu_.start_temp_calibration();
+//	ROS_WARN("IMU temperature calibration started");
+
+	res.success = false;
+	return true;
+}
+
+}// namespace fcu_io

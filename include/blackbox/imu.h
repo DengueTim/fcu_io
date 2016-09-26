@@ -2,21 +2,21 @@
 #define IMU_H_
 
 typedef struct fp_vector {
-    float X;
-    float Y;
-    float Z;
+	float X;
+	float Y;
+	float Z;
 } t_fp_vector_def;
 
 typedef union {
-    float A[3];
-    t_fp_vector_def V;
+	float A[3];
+	t_fp_vector_def V;
 } t_fp_vector;
 
 // Angles in radians:
 typedef struct attitude_t {
-    float roll;
-    float pitch;
-    float heading;
+	float roll;
+	float pitch;
+	float heading;
 } attitude_t;
 
 void imuInit(void);

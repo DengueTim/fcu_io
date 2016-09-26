@@ -4,21 +4,21 @@
 /* Decoders for reading advanced data formats from data streams */
 #include <stdint.h>
 
-#include "stream.h"
+#include "parser_input_stream.h"
 
-void streamReadTag2_3S32(mmapStream_t *stream, int32_t *values);
-void streamReadTag8_4S16_v1(mmapStream_t *stream, int32_t *values);
-void streamReadTag8_4S16_v2(mmapStream_t *stream, int32_t *values);
-void streamReadTag8_8SVB(mmapStream_t *stream, int32_t *values, int valueCount);
+void streamReadTag2_3S32(blackbox::ParserInputStream &pis, int32_t *values);
+void streamReadTag8_4S16_v1(blackbox::ParserInputStream &pis, int32_t *values);
+void streamReadTag8_4S16_v2(blackbox::ParserInputStream &pis, int32_t *values);
+void streamReadTag8_8SVB(blackbox::ParserInputStream &pis, int32_t *values, int valueCount);
 
-int16_t streamReadS16(mmapStream_t *stream);
+int16_t streamReadS16(blackbox::ParserInputStream &pis);
 
-float streamReadRawFloat(mmapStream_t *stream);
+float streamReadRawFloat(blackbox::ParserInputStream &pis);
 
-uint32_t streamReadEliasDeltaU32(mmapStream_t *stream);
-int32_t streamReadEliasDeltaS32(mmapStream_t *stream);
+uint32_t streamReadEliasDeltaU32(blackbox::ParserInputStream &pis);
+int32_t streamReadEliasDeltaS32(blackbox::ParserInputStream &pis);
 
-uint32_t streamReadEliasGammaU32(mmapStream_t *stream);
-int32_t streamReadEliasGammaS32(mmapStream_t *stream);
+uint32_t streamReadEliasGammaU32(blackbox::ParserInputStream &pis);
+int32_t streamReadEliasGammaS32(blackbox::ParserInputStream &pis);
 
 #endif

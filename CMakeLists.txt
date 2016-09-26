@@ -66,7 +66,7 @@ add_executable(fcu_io_node
   src/blackbox/expo.c
   src/blackbox/gpxwriter.c
   src/blackbox/imu.c
-  src/blackbox/parser.c
+  src/blackbox/parser.cpp
   src/blackbox/serial.cpp
   src/blackbox/stats.c
   src/blackbox/stream.c
